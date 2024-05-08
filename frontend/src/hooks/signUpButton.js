@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import { useAuthContext } from '../context/AuthContext';
 
 const signUpButton = () => {
-    const { authUser, setAuthUser } = useAuthContext()
+    const {setAuthUser } = useAuthContext()
     const [loading, setLoading] = useState(false);
     const signup = async ({ fullName, userName, password, confirmPassword, gender }) => {
         const success = handleInputErrors({ fullName, userName, password, confirmPassword, gender })
@@ -14,7 +14,7 @@ const signUpButton = () => {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ fullName, userName, password, confirmPassword, gender })
-            })
+            });
 
             const data = await res.json();
             if (data.error) {

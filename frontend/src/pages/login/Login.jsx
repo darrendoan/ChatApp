@@ -1,16 +1,17 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import useLogin from '../../hooks/login';
+import useLogin from '../../hooks/login.js';
 
 const Login = () => {
 
   const [userName, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
   const { loading, login } = useLogin()
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await login(username, password)
+    await login(userName, password)
   }
   return (
     <div className='flex flex-col items-center justify-center min-w-96 mx-auto'>
@@ -20,7 +21,7 @@ const Login = () => {
           <span className='text-purple-500'> Darren's Chatapp</span>
         </h1>
 
-        <form onSubmit={handleSubmit()}>
+        <form onSubmit={handleSubmit}>
           <div>
             <label className='label p-2'>
               <span className='text-base label-text'>Username</span>

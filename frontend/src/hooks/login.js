@@ -4,6 +4,7 @@ import { useAuthContext } from "../context/AuthContext";
 const useLogin = () => {
     const [loading, setLoading] = useState(false)
     const {setAuthUser} = useAuthContext()
+
     const login = async (userName, password) => {
         setLoading(true)
         try {
@@ -25,6 +26,8 @@ const useLogin = () => {
             setLoading(false)
         }
     }
+
+    return {loading, login}
 }
 
 export default useLogin;
