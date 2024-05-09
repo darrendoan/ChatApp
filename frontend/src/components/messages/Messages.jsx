@@ -5,25 +5,35 @@ import MessageSkeleton from '../skeletons/messageSkeleton'
 import useListenMessages from '../../hooks/useListenMessages'
 
 const Messages = () => {
+    // Fetch messages from the database
     const { messages, loading } = useGetMessages();
+
+    // Listen for new messages
     useListenMessages();
+
+    // Reference to the last message element
     const lastMessageRef = useRef();
+
+    // Scroll to the last message when new messages are received
     useEffect(() => {
-        setTimeout(() => {
-            lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
-        }, 100)
+        if (lastMessageRef.current) {
+            lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
+        }
     }, [messages])
 
     return (
         <div className='flex-1 overflow-auto px-4'>
-            {!loading && messages.length > 0 && messages.map((message) => (
-                <div key={message._id}
-                    ref={lastMessageRef}>
+            {/* Display messages */}
+            {!loading && messages.length > 0 && messages.map((message, index) => (
+                <div key={message._id} ref={index === messages.length - 1 ? lastMessageRef : null}>
                     <Message message={message} />
                 </div>
             ))}
-            {loading && [...Array(3)].map((_, idx) => <MessageSkeleton key={idx} />)}
 
+            {/* Display loading skeleton */}
+            {loading && Array.from({ length: 3 }).map((_, idx) => <MessageSkeleton key={idx} />)}
+
+            {/* Display message to start conversation if no messages */}
             {!loading && messages.length === 0 && (
                 <p className='text-center'>Send a message to get started!</p>
             )}

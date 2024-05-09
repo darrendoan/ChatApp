@@ -1,31 +1,44 @@
-import { useState } from "react"
+import { useState } from "react";
 import { useAuthContext } from "../context/AuthContext";
+import toast from 'react-hot-toast';
 
+// Custom hook to handle logout process
 const useLogout = () => {
-    const [loading, setLoading] = useState(false)
-    const {setAuthUser} = useAuthContext()
+    // Accessing setAuthUser function from AuthContext
+    const { setAuthUser } = useAuthContext();
+    // State to manage loading status
+    const [loading, setLoading] = useState(false);
 
+    // Function to handle logout process
     const logout = async () => {
-        setLoading(true)
+        setLoading(true);
         try {
+            // Sending logout request to the server
             const res = await fetch("/api/auth/logout", {
                 method: "POST",
-                headers: { "Content-Type": "appliation/json" }
+                headers: { "Content-Type": "application/json" }
             });
-            const data = await res.json()
-            if (data.error) {
-                throw new Error(data.error)
+            const data = await res.json();
+            // Handling logout success
+            if (!data.error) {
+                // Removing user data from local storage
+                localStorage.removeItem("chat-user");
+                // Setting authenticated user to null
+                setAuthUser(null);
+            } else {
+                // Displaying error toast if logout fails
+                throw new Error(data.error);
             }
-
-            localStorage.removeItem("chat-user")
-            setAuthUser(null)
         } catch (error) {
-            toast.error(error.message)
+            // Displaying error toast if there's an error during logout process
+            toast.error(error.message);
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
-    return {loading,logout}
+    };
+
+    // Return loading status and logout function
+    return { loading, logout };
 };
 
 export default useLogout;
